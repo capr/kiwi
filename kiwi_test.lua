@@ -1,23 +1,5 @@
-local kiwi = require("kiwi")
-local ffi = require("ffi")
-
-ffi.cdef[[
-typedef long time_t;
-typedef struct timeval {
-  time_t tv_sec;
-  time_t tv_usec;
-} timeval;
-int gettimeofday(struct timeval* t, void* tzp);
-]]
-
-local function now()
-  local t = ffi.new("timeval")
-  ffi.C.gettimeofday(t, nil)
-  return tonumber(t.tv_sec) + tonumber(t.tv_usec) / 1e6
-end
-
---------------------------------------------------------------------------------
--- full functionality test
+local kiwi = require'kiwi'
+local now = require'time'.clock
 
 local script = [[
 vars x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20
@@ -70,14 +52,19 @@ for i, cn in ipairs(cns) do
 end
 
 solver:add_edit_variable(vars.x1, kiwi.strength.medium)
+--solver:add_edit_variable(vars.x20, 0)
+--solver:suggest_value(vars.x20, 0)
 
-n = 10000
+local n = 100000
 print(('starting benchmark (%d iterations)'):format(n))
 local start = now()
-local j = 1
-for i = 1, n, 1 do
+for i = 1, n do
   solver:suggest_value(vars.x1, i)
   solver:update_variables()
 end
+print(vars.x1)
+print(vars.x2)
+print(vars.x19)
+print(vars.x20)
 local stop = now()
-print(('finished in %f seconds'):format(stop-start))
+print(('solved in %fms'):format((stop-start)*1000/n))

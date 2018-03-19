@@ -37,6 +37,7 @@ local kiwi = {}
 
 --------------------------------------------------------------------------------
 -- utils
+
 local function near_zero(val)
   if val < 0.0 then
     return -val < 1e-8
@@ -287,7 +288,7 @@ do
     coefficient = coefficient or 1
     assert(istype(symbol, 'symbol'), 'row:insert():1 ~= symbol')
     assert(type(coefficient) == 'number', 'row:insert():2 ~= number')
-    -- add or insert all cells of thers (multiplied by coefficient)
+    -- add or insert all cells of others (multiplied by coefficient)
     self.constant = self.constant + other.constant * coefficient
     for sym, coeff in pairs(other.cells) do
       self.cells[sym] = (self.cells[sym] or 0) + coeff * coefficient
@@ -354,7 +355,6 @@ do
   end
 
   function solver_mt.__call(self)
-    other_or_const = other_or_const or 0
     local new = setmetatable({}, solver_mt)
     new.objective = row()
     new.id_tick = 1
@@ -453,7 +453,7 @@ do
     local info = self.edits[variable]
     local delta = value - info.constant
     info.constant = value
-    
+
     local row = self.rows[info.tag.marker]
     if row ~= nil then
       if row:add(-delta) < 0 then
@@ -719,7 +719,7 @@ do
   -- returns pair: symbol, row
   function solver.get_leaving_row(self, entering)
     assert(istype(entering, 'symbol'), 'solver:get_leaving_row():1 ~= symbol')
-    local ratio = 1/0 -- again, no DBL_MAX in lua, so we just use inf
+    local ratio = 1/0 -- again, no DBL_MAX in Lua, so we just use inf
     local rsym, rrow = nil, nil
     for isym, irow in pairs(self.rows) do
       if isym.stype ~= 'external' then
@@ -817,7 +817,7 @@ local function parse_constraint(vars, str)
   local parts = {}
   str:gsub("([^ \t\f]+)", function (c) parts[#parts+1] = c end)
   parts[#parts+1] = 'eof'
-  
+
   local strngth = strength.required
   -- check for strength component
   if #parts >=2 and parts[#parts-1]:sub(1,1) == '#' then

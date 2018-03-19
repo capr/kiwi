@@ -1,6 +1,10 @@
-# Kiwi.lua
+---
+tagline: Cassowary constraint solver
+---
 
-This is a lua port of the [kiwi](https://github.com/nucleic/kiwi) project, a cleaner
+## `local kiwi = require'kiwi'`
+
+This is a Lua port of the [kiwi](https://github.com/nucleic/kiwi) project, a cleaner
 and faster implementation of the original cassowary project.
 It allows to solve a system of equality and inequality constraints and find valid
 values for the variables that have been used in these constraints.
@@ -12,9 +16,9 @@ These sorts of situations arise all the time in UI programming; e.g.: "I'd like 
 Constraint solvers offer a way out of the primordial mess of nasty conditionals and brittle invalidations.
 "
 
-Kiwi.lua is a pretty straightforward port from the original C++ code which mapped surprisingly well to lua 5.1.
+Kiwi.lua is a pretty straightforward port from the original C++ code which mapped surprisingly well to Lua 5.1.
 It comes without any dependencies and is contained in a single file.
-Where appropriate, the code was translated to more idiomatic lua code (e.g. handling of shared data and underscore as word seperator instead of camelCase).
+Where appropriate, the code was translated to more idiomatic Lua code (e.g. handling of shared data and underscore as word seperator instead of camelCase).
 Some of the nice functionality from the C++ project is not available, most notably the overloaded operators
 which allowed to embed the constraints directly in C++.
 For this purpose, there is a basic frontend available that parses a string into a constraint.
@@ -27,7 +31,7 @@ If you found any, let me know!
 
 ## Usage
 
-Getting started is rather easy. Just drop the file into a directory in your lua path and require it.
+Getting started is rather easy. Just drop the file into a directory in your Lua path and require it.
 Here is a code example:
 
 ```lua
@@ -72,7 +76,7 @@ This documentation only covers the required parts.
 If you feel like directly using the internal objects, take a look at the source
 code and use the original project (link at the top) as reference.
 
-### kiwi.variable
+### `kiwi.variable`
 
 ```lua
 kiwi.variable(name) -- creates new variable instance with corresponding name
@@ -81,7 +85,7 @@ variable.value -- holds the value of the variable, writes don't influence the
   -- solver but are not recommended anyway
 ```
 
-### kiwi.parse\_constraint
+### `kiwi.parse_constraint`
 
 ```lua
 kiwi.parse_constraint(vars, string) -- parses a string into a constraint
@@ -93,8 +97,8 @@ kiwi.parse_constraint(vars, string) -- parses a string into a constraint
  --   Terms are combined with either + or -
  --   The relationship between left and right side can be ==, <=, or >=
  --   The constraint can be followed by one of these:
- --     #required, #string, #medium, #weak (none defaults to required)
- --   Every is seperated via WHITESPACE
+ --     #required, #strong, #medium, #weak (the default is #required)
+ --   Whitespace is ignored.
  -- examples:
  --   1 + x1 >= 2 x3 - x5 #strong
  --   x >= 0 - x1 - 3 x4
